@@ -75,16 +75,34 @@ public:
 
 int Car::cnt = 0;
 
+ostream& operator<<(ostream& os, Car &X) {
+	cout << "Name    : " << X.name << endl;
+	cout << "Price   : " << X.getPrice() << endl;
+	cout << "Model   : " << X.model << endl << endl;
+	return os;
+}
+
+istream& operator>>(istream &is, Car &X) {
+	char n[1000];
+	cout << "Enter name  : "; cin.getline(n, 1000);
+	X.setName(n);
+	int p;
+	cout << "Enter price :"; cin >> p;
+	X.setPrice(p);
+
+	cout << "Enter model :"; cin >> X.model;
+	return is;
+}
+
 int main() {
 	Car A;
-	A.setName("Maruti");
-	A.setPrice(-100);
-	A.model = 2020;
+	cin >> A;
 
 	Car B = A;
 	Car C = B;
 
 	A.name[0] = 'T';
+
 	if (A > B) { // A ne function ko call kia and B as argument pass hoga..
 		cout << "A\n";
 	}
@@ -92,9 +110,7 @@ int main() {
 		cout << "B\n";
 	}
 
-	// A.print();
-	// B.print();
-	// C.print();
+	cout << A << B << C << endl;
 
 
 
