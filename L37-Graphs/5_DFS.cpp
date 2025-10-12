@@ -26,21 +26,28 @@ public:
 		}
 	}
 
-	void dfsHelper(T src, unordered_map<T, bool> &visited) {
-		cout << src << ' ';
+	void componentCountHelper(T src, unordered_map<T, bool> &visited) {
 		visited[src] = true;
-
+		cout << src << " ";
 		for (auto ch : adj[src]) {
 			if (!visited[ch]) {
-				dfsHelper(ch, visited);
+				componentCountHelper(ch, visited);
 			}
 		}
 	}
 
-	void dfs(T src) {
+	int componentCount() {
 		unordered_map<T, bool> visited;
 
-		dfsHelper(src, visited);
+		int cnt = 0;
+		for (auto p : adj) {
+			if (!visited[p.first]) {
+				componentCountHelper(p.first, visited);
+				cnt++;
+			}
+		}
+
+		return cnt;
 	}
 
 
@@ -56,11 +63,14 @@ int main() {
 	g.addEdge(4, 3);
 	g.addEdge(3, 2);
 	g.addEdge(3, 5);
+	g.addEdge(6, 7);
+	g.addEdge(8, 7);
 
 	// unordered_map<int, bool> visited;
 	// g.dfsHelper(1, visited);
 
-	g.dfs(1);
+	int ans = g.componentCount();
+	cout << "\nTotal Components : " << ans << endl;
 
 	return 0;
 }
