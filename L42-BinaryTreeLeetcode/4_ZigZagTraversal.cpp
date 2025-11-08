@@ -1,6 +1,7 @@
 #include <iostream>
-#include <map>
+#include <algorithm>
 #include <queue>
+#include <vector>
 using namespace std;
 class node {
 public:
@@ -29,72 +30,54 @@ node* createTree() {
 	return root; // once root, LST and RST both are created we will return the root node..
 }
 
-void preorder(node* root) {
-	if (root == NULL) { // Tree hi nhi hai toh vapis jaao kuch nhi print ho paega..
-		return;
-	}
+void ZigZagTraversal(node* root) {
+	vector<int> v;
 
-	cout << root->data << " "; // root ka data print krenge sabse pehle
-	preorder(root->left); // LST ko print krenge, recursion se keh kar
-	preorder(root->right); // RST ko print krenge, recursion se keh kar
-}
+	queue< node*> q;
+	q.push(root);
+	q.push(NULL);
 
-void inorder(node* root) {
-	if (root == NULL) {
-		return;
-	}
-
-	inorder(root->left); // LST ka kaam recursion ko boldo...
-	cout << root->data << " "; // LST ke baad we will print root ka data
-	inorder(root->right); // RST ka kaam recursion ko boldo krne ko
-}
-
-void postorder(node* root) {
-	if (root == NULL) {
-		return;
-	}
-
-	postorder(root->left); // LST ka kaam recursion ko boldo...
-	postorder(root->right); // RST ka kaam recursion ko boldo krne ko
-	cout << root->data << " "; // LST and RST ke baad we will print root ka data
-}
-
-
-void TreeTopView(node* root) {
-	map<int, int> h;
-	queue< pair<node*, int> > q;
-	q.push({root, 0});
+	int level = 0;
 
 	while (!q.empty()) {
-		auto p = q.front();
+		node* x = q.front();
 		q.pop();
 
-		node* x = p.first;
-		int level = p.second;
-		if (h.count(level) == 0) {
-			h[level] = x->data;
+		if (x != NULL) {
+			v.push_back(x->data);
+
+			if (x->left) {
+				q.push(x->left);
+			}
+			if (x->right) {
+				q.push(x->right);
+			}
+		}
+		else { // x == NULL
+			if (level % 2 == 1) {
+				reverse(v.begin(), v.end());
+			}
+			for (int i = 0; i < v.size(); ++i)
+			{
+				cout << v[i] << " ";
+			}
+
+			level++;
+			v.clear();
+			cout << endl;
+			if (!q.empty()) q.push(NULL);
 		}
 
-		if (x->left) {
-			q.push({x->left, level - 1});
-		}
-		if (x->right) {
-			q.push({x->right, level + 1});
-		}
 	}
 
-	for (auto p : h) {
-		cout << p.second << " ";
-	}
-	cout << endl;
+
 }
 
 int main() {
 
 	// 8 10 1 -1 -1 6 4 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
 	node* root = createTree();
-
-	TreeTopView(root);
+	ZigZagTraversal(root);
 
 	return 0;
 }
